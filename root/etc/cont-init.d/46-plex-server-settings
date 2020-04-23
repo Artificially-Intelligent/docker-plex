@@ -1,0 +1,59 @@
+#!/usr/bin/with-contenv bash
+
+# Pass startup options directly to PLEX config from environment variables
+# Info on available options can be found here: https://support.plex.tv/articles/201105343-advanced-hidden-server-settings/
+
+PLEX_OVERRIDE_CONFIG=/defaults/plexmediaserver
+
+PLEX_OPTIONS_OVERRIDE=$(printenv | grep "\
+AlbumSort\|\
+allowMediaDeletion\|\
+allowedNetworks\|\
+ArticleStrings\|\
+autoEmptyTrash\|\
+BackgroundTranscodeLowPriority\|\
+DlnaDeviceDiscoveryInterval\|\
+DlnaEnabled\|\
+DlnaPlatinumLoggingLevel\|\
+EnableIPv6\|\
+FriendlyName\|\
+FSEventLibraryUpdatesEnabled\|\
+FSEventLibraryPartialScanEnabled\|\
+GdmEnabled\|\
+iTunesLibraryXmlPath\|\
+iTunesSharingEnabled\|\
+LocalAppDataPath\|\
+logDebug\|\
+LogNumFiles\|\
+LogVerbose\|\
+ManualPortMappingMode\|\
+ManualPortMappingPort\|\
+RadioDaysSinceLastPlayed\|\
+secureConnections\|\
+sendCrashReports\|\
+ScheduledLibraryUpdatesEnabled\|\
+ScheduledLibraryUpdateInterval\|\
+TranscoderDefaultDuration\|\
+TranscoderH264OptionsOverride\|\
+TranscoderLogLevel\|\
+TranscoderPhotoFileSizeLimitMiB\|\
+TranscoderTempDirectory")
+
+
+if [ ! -z "$PORT" ]; then
+PLEX_OPTIONS_OVERRIDE_PORT="ManualPortMappingMode=1
+ManualPortMappingPort=$PORT"
+else
+PLEX_OPTIONS_OVERRIDE_PORT=$(printenv | grep "\
+ManualPortMappingMode\|\
+ManualPortMappingPort")
+fi
+
+PLEX_OPTIONS_OVERRIDE="$PLEX_OPTIONS_OVERRIDE
+$PLEX_OPTIONS_OVERRIDE_PORT"
+
+if [ ! -z "$PLEX_OPTIONS_OVERRIDE" ]; then
+    echo "Options applied from ENV variables:"
+   # echo $PLEX_OPTIONS_OVERRIDE >> $PLEX_OVERRIDE_CONFIG
+    echo $PLEX_OPTIONS_OVERRIDE
+fi
