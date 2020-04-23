@@ -54,6 +54,6 @@ $PLEX_OPTIONS_OVERRIDE_PORT"
 
 if [ ! -z "$PLEX_OPTIONS_OVERRIDE" ]; then
     echo "Options applied from ENV variables:"
-   # echo $PLEX_OPTIONS_OVERRIDE >> $PLEX_OVERRIDE_CONFIG
+    echo $PLEX_OPTIONS_OVERRIDE >> $PLEX_OVERRIDE_CONFIG
     echo $PLEX_OPTIONS_OVERRIDE
 fi
