@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv bash
+
+# Check fuse mount points are active
+healthcheck_mountpoints=${HEALTHCHECK_MOUNTS:-/mnt}
+
+# # Check expected folder paths exist
+healthcheck_paths=${HEALTHCHECK_PATHS:-/mnt}
+
+library_path_master=${LIB_PATH_MASTER:-"/mnt/plex-scanner/Library/Application Support/Plex Media Server"
+library_path_local=${LIB_PATH_LOCAL:-"/config/Library/Application Support/Plex Media Server"}
+ram_disk_path=${RAM_DISK_PATH:-"/ram_disk"}

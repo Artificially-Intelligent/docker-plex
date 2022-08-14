@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv bash
+
+if [[ -n "${LIB_SAVE_CRON:-}" ]]; then
+    echo "*** scheduling job: save_library_to_disk"
+    go-cron "$LIB_SAVE_CRON" /usr/local/bin/save_library_to_disk.sh &
+    sleep 2
+fi
+
+if [[ -n "${LIB_RELOAD_CRON:-}" ]]; then
+    echo "*** scheduling job: load_master_library_db"
+    go-cron "$LIB_RELOAD_CRON" /usr/local/bin/save_library_to_disk.sh && /usr/local/bin/load_master_library_db.sh &
+    sleep 2
+fi
+
+exec wait

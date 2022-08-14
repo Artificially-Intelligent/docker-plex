@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv bash
+. /usr/local/bin/variables
+
+# add finish actions here
+/usr/local/bin/save_library_to_disk.sh
+
+exit 0
