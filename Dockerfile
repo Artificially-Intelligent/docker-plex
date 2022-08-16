@@ -11,10 +11,10 @@ COPY root/ /
 
 # # install packages
 RUN \
-#     echo "**** apt source change for local build ****" && \
-#     sed -i "s/archive.ubuntu.com/$APT_MIRROR/g" /etc/apt/sources.list && \
-#     echo "**** install runtime packages ****" && \
-#     apt-get update && \
+    echo "**** apt source change for local build ****" && \
+    sed -i "s/archive.ubuntu.com/$APT_MIRROR/g" /etc/apt/sources.list && \
+    echo "**** install runtime packages ****" && \
+    apt-get update && \
 #     apt-get install -yq --no-install-recommends apt-utils && \
     apt-get install -yq --no-install-recommends \
         cron \
@@ -22,7 +22,7 @@ RUN \
         sshfs \
         && \
     echo "**** instaling plex-db-sync ****" && \
-    wget https://raw.githubusercontent.com/Fmstrat/plex-db-sync/master/plex-db-sync -O "/usr/local/bin/plex_db_sync.sh") && \
+    wget https://raw.githubusercontent.com/Fmstrat/plex-db-sync/master/plex-db-sync -O "/usr/local/bin/plex_db_sync.sh" && \
 #     update-ca-certificates && \
 #     sed -i 's/#user_allow_other/user_allow_other/' /etc/fuse.conf && \
     echo "**** cleanup ****" && \
