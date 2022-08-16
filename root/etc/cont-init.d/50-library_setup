@@ -5,11 +5,11 @@ echo
 echo "$(date) - Plex custom startup scripts started"
 echo
 
-# Link image and database folders to plex scanner, the location that the master copies are either maintained by another plex instance or downloaded to from cloud 
-bash /usr/local/bin/link-library-folders.sh
+# # Link image and database folders to plex scanner, the location that the master copies are either maintained by another plex instance or downloaded to from cloud 
+# bash /usr/local/bin/link-library-folders.sh
 
 # Check for library corruption, if found restore from last backup
-bash /usr/local/bin/restore-library-backup.sh
+bash /usr/local/bin/restore-corrupt-library-backup.sh
 
 # Ensure library files synced from cloud are accesible by plex
 bash /usr/local/bin/fix-library-permissions.sh
