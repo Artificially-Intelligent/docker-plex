@@ -5,17 +5,14 @@ echo
 echo "starting copy and sync of plex master library to local working library path"
 echo 
 
-library_db_path_master="${library_path_master}/Plug-in Support/Databases"
-
 library_db_path_local="${library_path_local}/Plug-in Support/Databases"
-library_db_backup_path_local="${library_path_local}/Plug-in Support/Databases_Backup"
 ram_disk_db_path="${ram_disk_path}/Plug-in Support/Databases"
 
-mkdir -p "${library_db_path_master}"
 mkdir -p "${library_db_path_local}"
 chown -R -h ${PLEX_UID}:${PLEX_GID} "${library_path_local}/Plug-in Support"
 mkdir -p "${library_db_backup_path_local}"
 chown -R -h ${PLEX_UID}:${PLEX_GID} "${library_db_backup_path_local}"
+mkdir -p "${library_db_backup_path_master}"
 mkdir -p "${ram_disk_db_path}"
 chown -R -h ${PLEX_UID}:${PLEX_GID} "${ram_disk_db_path}"
 
@@ -55,7 +52,7 @@ function syncPlexDB() {
 
 for  lib_file in "${library_files[@]}"
 do
-    library_db_backup_file_master=$(find "${library_db_path_master}" -name ${lib_file}-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9] | sort | tail -n 1)
+    library_db_backup_file_master=$(find "${library_db_backup_path_master}" -name ${lib_file}-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9] | sort | tail -n 1)
     library_db_backup_file_local="${library_db_backup_path_local}/${lib_file}"
     if [ -f "${library_db_backup_file_master}" ]
     then

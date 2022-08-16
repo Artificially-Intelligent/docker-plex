@@ -6,8 +6,13 @@ healthcheck_mountpoints=${HEALTHCHECK_MOUNTS:-/mnt}
 # # Check expected folder paths exist
 healthcheck_paths=${HEALTHCHECK_PATHS:-/mnt}
 
-library_path_master=${LIB_PATH_MASTER:-"/mnt/plex-scanner/Library/Application Support/Plex Media Server"
+
 library_path_local=${LIB_PATH_LOCAL:-"/config/Library/Application Support/Plex Media Server"}
+
+library_db_backup_path_local=${LIB_BACKUP_PATH_LOCAL:-"${library_path_local}/Plug-in Support/Databases"}
+
+library_db_backup_path_master=${LIB_BACKUP_PATH_MASTER:-${library_db_backup_path_local}}
+
 ram_disk_path=${RAM_DISK_PATH:-"/ram_disk"}
 
 # crontab settings for saving library to local backup. Missing = dont run
