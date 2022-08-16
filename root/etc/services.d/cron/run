@@ -1,14 +1,15 @@
 #!/usr/bin/with-contenv bash
+. /usr/local/bin/variables
 
-if [[ -n "${LIB_SAVE_CRON:-}" ]]; then
+if [[ -n "${library_save_cron:-}" ]]; then
     echo "*** scheduling job: save_library_to_disk"
-    go-cron "$LIB_SAVE_CRON" /usr/local/bin/save_library_to_disk.sh &
+    go-cron "$library_save_cron" /usr/local/bin/save_library_to_disk.sh &
     sleep 2
 fi
 
-if [[ -n "${LIB_RELOAD_CRON:-}" ]]; then
+if [[ -n "${library_reload_cron:-}" ]]; then
     echo "*** scheduling job: load_master_library_db"
-    go-cron "$LIB_RELOAD_CRON" /usr/local/bin/save_library_to_disk.sh && /usr/local/bin/load_master_library_db.sh &
+    go-cron "$library_reload_cron" /usr/local/bin/save_library_to_disk.sh && /usr/local/bin/load_master_library_db.sh &
     sleep 2
 fi
 
