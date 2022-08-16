@@ -19,8 +19,10 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}
-
+  # IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: slink42/plex
+  # Use docker.io for Docker Hub if empty
+  DOCKERHUB_USER: slink42
 
 jobs:
   build:
@@ -91,3 +93,30 @@ jobs:
         # This step uses the identity token to provision an ephemeral certificate
         # against the sigstore community Fulcio instance.
         run: echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign {}@${{ steps.build-and-push.outputs.digest }}
+      # Login against a DockerHub Docker registry
+      -
+        name: Login to docker.io
+        if: env.X_SKIP == 'false'
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PASS }}
+      # Update DockerHub description
+      -
+        name: Update Dockerhub description
+        if: env.X_SKIP == 'false'
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ env.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PASS }}
+          repository: ${{ env.IMAGE_NAME }}
+          short-description: ${{ steps.vars.outputs.github_desc }}
+      # Send build notification to telegram
+      - 
+        name: Notify Telegram
+        uses: yanzay/notify-telegram@v0.1.0
+        if: env.X_SKIP == 'false' && always() && github.actor == github.event.repository.owner.login
+        with:
+          chat: ${{ secrets.TELEGRAM_CHAT }} # user id or channel name secret
+          token: ${{ secrets.TELEGRAM_TOKEN }} # token secret
+          status: ${{ job.status }} # do not modify this line
