@@ -1,6 +1,20 @@
+ARG UBUNTU_VER=20.04
+
+ARG UBUNTU_VER_SHA=@sha256:6cad3b09aa963b47380bbf0053980f22d27bb4b575ff5b171bb9c00a239ad018
+#FROM ubuntu:${UBUNTU_VER} AS ubuntu
+FROM ghcr.io/by275/base:ubuntu${UBUNTU_VER}${UBUNTU_VER_SHA} AS prebuilt
+
+# 
+# RELEASE
+# 
+
 FROM lscr.io/linuxserver/plex:latest
 LABEL maintainer="slink42"
 LABEL org.opencontainers.image.source https://github.com/Artificially-Intelligent/docker-plex
+
+
+# add go-cron
+COPY --from=prebuilt /go/bin/go-cron /bar/usr/local/bin/
 
 # add local files
 COPY root/ /
@@ -20,6 +34,8 @@ RUN \
 #     wget https://raw.githubusercontent.com/Fmstrat/plex-db-sync/master/plex-db-sync -O "/usr/local/bin/plex_db_sync.sh" && \
 # #     update-ca-certificates && \
 # #     sed -i 's/#user_allow_other/user_allow_other/' /etc/fuse.conf && \
+    echo "**** permissions ****" && \
+    chmod a+x /usr/local/bin/* && \
     echo "**** cleanup ****" && \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
