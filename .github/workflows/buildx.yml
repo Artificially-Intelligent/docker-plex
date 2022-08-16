@@ -117,7 +117,7 @@ jobs:
       - 
         name: Notify Telegram
         uses: yanzay/notify-telegram@v0.1.0
-        if: env.X_SKIP == 'false' && always() && github.actor == github.event.repository.owner.login
+        if: env.X_SKIP == 'false' && always()
         with:
           chat: ${{ secrets.TELEGRAM_CHAT }} # user id or channel name secret
           token: ${{ secrets.TELEGRAM_TOKEN }} # token secret
