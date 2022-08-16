@@ -19,7 +19,7 @@ jobs:
     if: github.event_name != 'pull_request'
     strategy:
       matrix:
-        plex-type: [latest, mod]
+        plex-type: [latest]
     steps:
         # Needs to be updated to grab current plex version
       -
@@ -128,7 +128,7 @@ jobs:
     if: github.event_name == 'pull_request'
     strategy:
       matrix:
-        plex-type: [latest, mod]
+        plex-type: [latest]
     steps:
         # Needs to be updated to grab current plex version
       -

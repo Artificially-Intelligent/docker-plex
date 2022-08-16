@@ -5,18 +5,18 @@ LABEL org.opencontainers.image.source https://github.com/Artificially-Intelligen
 # add local files
 COPY root/ /
 
-# # # install packages
-# RUN \
-#     echo "**** apt source change for local build ****" && \
-#     sed -i "s/archive.ubuntu.com/$APT_MIRROR/g" /etc/apt/sources.list && \
-#     echo "**** install runtime packages ****" && \
-#     apt-get update && \
-# #     apt-get install -yq --no-install-recommends apt-utils && \
-#     apt-get install -yq --no-install-recommends \
-#         cron \
-#         sqlite3 \
-#         sshfs \
-#         && \
+# # install packages
+RUN \
+    echo "**** apt source change for local build ****" && \
+    sed -i "s/archive.ubuntu.com/$APT_MIRROR/g" /etc/apt/sources.list && \
+    echo "**** install runtime packages ****" && \
+    apt-get update && \
+#     apt-get install -yq --no-install-recommends apt-utils && \
+    apt-get install -yq --no-install-recommends \
+        cron \
+        sqlite3 \
+        sshfs \
+        && \
 #     echo "**** instaling plex-db-sync ****" && \
 #     wget https://raw.githubusercontent.com/Fmstrat/plex-db-sync/master/plex-db-sync -O "/usr/local/bin/plex_db_sync.sh" && \
 # #     update-ca-certificates && \
@@ -24,7 +24,8 @@ COPY root/ /
 #     echo "**** cleanup ****" && \
 #     apt-get clean autoclean && \
 #     apt-get autoremove -y && \
-#     rm -rf /tmp/* /var/lib/{apt,dpkg,cache,log}/
+#     rm -rf /tmp/* /var/lib/{apt,dpkg,cache,log}/ && \
+    echo "**** install complete ****" 
 
 # # environment settings
 # ENV \
