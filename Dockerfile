@@ -1,7 +1,3 @@
-
-# 
-# RELEASE
-# 
 FROM lscr.io/linuxserver/plex:latest
 LABEL maintainer="slink42"
 LABEL org.opencontainers.image.source https://github.com/Artificially-Intelligent/docker-plex
@@ -44,10 +40,5 @@ COPY root/ /
 #     MFS_USER_OPTS="rw,use_ino,func.getattr=newest,category.action=all,category.create=ff,cache.files=auto-full,dropcacheonclose=true" \
 #     DATE_FORMAT="+%4Y/%m/%d %H:%M:%S"
 
-VOLUME /config /cache /log /mnt
-WORKDIR /mnt
-
 HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \
     CMD /usr/local/bin/healthcheck
-
-ENTRYPOINT ["/init"]
