@@ -26,12 +26,11 @@ jobs:
         name: Check if buildx required
         run: |
           if [ ${{ matrix.rclone-type }} = "latest" ]; then
-            rclone_install_script_url="https://rclone.org/install.sh"
+            NOVAR=1
           elif [ ${{ matrix.rclone-type }} = "mod" ]; then
-            rclone_install_script_url="https://raw.githubusercontent.com/wiserain/rclone/mod/install.sh"
+            NOVAR=2
           fi
-          curl -fsSL $rclone_install_script_url | sudo bash
-          PLEX_VER=$(rclone version | head -n1 | cut -f2 -dv)
+          PLEX_VER=$(echo "whatistheversion")
           docker pull ${{ env.IMAGE_NAME }}:$PLEX_VER && X_SKIP=true || X_SKIP=false
           [[ $GITHUB_EVENT_NAME != "schedule" ]] && X_SKIP=false
           echo "X_SKIP=$X_SKIP" >> $GITHUB_ENV
@@ -135,12 +134,11 @@ jobs:
         name: Check if buildx required
         run: |
           if [ ${{ matrix.rclone-type }} = "latest" ]; then
-            rclone_install_script_url="https://rclone.org/install.sh"
+            NOVAR=1
           elif [ ${{ matrix.rclone-type }} = "mod" ]; then
-            rclone_install_script_url="https://raw.githubusercontent.com/wiserain/rclone/mod/install.sh"
+            NOVAR=2
           fi
-          curl -fsSL $rclone_install_script_url | sudo bash
-          PLEX_VER=$(rclone version | head -n1 | cut -f2 -dv)
+          PLEX_VER=$(echo "whatistheversion")
           docker pull ${{ env.IMAGE_NAME }}:$PLEX_VER && X_SKIP=true || X_SKIP=false
           [[ $GITHUB_EVENT_NAME != "schedule" ]] && X_SKIP=false
           echo "X_SKIP=$X_SKIP" >> $GITHUB_ENV
