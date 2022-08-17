@@ -1,10 +1,10 @@
 #!/usr/bin/with-contenv bash
 
 # Check fuse mount points are active
-healthcheck_mountpoints=${HEALTHCHECK_MOUNTS:-/mnt}
+healthcheck_mountpoints=${HEALTHCHECK_MOUNTS:-}
 
 # # Check expected folder paths exist
-healthcheck_paths=${HEALTHCHECK_PATHS:-/mnt}
+healthcheck_paths=${HEALTHCHECK_PATHS:-}
 
 
 library_path_local=${LIB_PATH_LOCAL:-"/config/Library/Application Support/Plex Media Server"}
