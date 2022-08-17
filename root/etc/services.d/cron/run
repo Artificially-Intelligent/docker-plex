@@ -30,5 +30,5 @@ chmod 0644 ${crontab_file}
 crontab ${crontab_file} && \
 echo "*** cron jobs created in crobtab ${crontab_file}" && cat ${crontab_file}
 
-cron
+# cron
 exec wait
