@@ -7,6 +7,8 @@ crontab_file=/etc/cron.d/library_jobs
 rm -f ${crontab_file}
 touch ${crontab_file}
 
+echo "* * * * * echo 'cron test' >> /var/log/cron.log 2>&1" > ${crontab_file}
+
 # if library_save_cron defined setup save_library_to_disk job
 if [[ -n "${library_save_cron:-}" ]]; then
     echo "*** scheduling job: save_library_to_disk"
@@ -24,6 +26,9 @@ fi
 # set crontab file permissions
 chmod 0644 ${crontab_file}
 
-[[ $(cat ${crontab_file} | wc -l) -gt 0 ]] && echo "*** cron jobs created in crobtab ${crontab_file}" && cat ${crontab_file}
+[[ $(cat ${crontab_file} | wc -l) -gt 0 ]] && \
+crontab ${crontab_file} && \
+echo "*** cron jobs created in crobtab ${crontab_file}" && cat ${crontab_file}
 
+cron
 exec wait
