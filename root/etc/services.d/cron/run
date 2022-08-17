@@ -26,9 +26,12 @@ fi
 # set crontab file permissions
 chmod 0644 ${crontab_file}
 
+# install crontab if not empty
 [[ $(cat ${crontab_file} | wc -l) -gt 0 ]] && \
 crontab ${crontab_file} && \
 echo "*** cron jobs created in crobtab ${crontab_file}" && cat ${crontab_file}
 
-# cron
+# start cron and follow until termination
+exec cron -f
+
 exec wait
