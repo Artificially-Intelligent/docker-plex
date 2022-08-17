@@ -1,22 +1,54 @@
 #!/usr/bin/with-contenv bash
 
+## Healthcheck
+
 # Check fuse mount points are active
 healthcheck_mountpoints=${HEALTHCHECK_MOUNTS:-}
 
-# # Check expected folder paths exist
+# Check expected folder paths exist
 healthcheck_paths=${HEALTHCHECK_PATHS:-}
 
-
-library_path_local=${LIB_PATH_LOCAL:-"/config/Library/Application Support/Plex Media Server"}
-
-library_db_backup_path_local=${LIB_BACKUP_PATH_LOCAL:-"${library_path_local}/Plug-in Support/Databases"}
-
-library_db_backup_path_master=${LIB_BACKUP_PATH_MASTER:-${library_db_backup_path_local}}
-
-ram_disk_path=${RAM_DISK_PATH:-"/ram_disk"}
+## Crontab
 
 # crontab settings for saving library to local backup. Missing = dont run
 library_save_cron=$LIB_SAVE_CRON
 
 # crontab settings for reloading library to from master backup. Missing = dont run
 library_reload_cron=$LIB_RELOAD_CRON
+
+## Plex Library
+
+# primary library path
+library_path_local=${LIB_PATH_LOCAL:-""${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}"/Plex Media Server"}
+
+# path to use for setting up library ramdisk
+ram_disk_path=${RAM_DISK_PATH:-"/ram_disk"}
+
+# load values from plex Preferences xml
+getXPathFromFile () {
+  xmllint --recover --xpath "$2" "$1"
+}
+
+plex_preferences="${library_path_local}/Preferences.xml"
+
+if [ -f "${plex_preferences}" ]; then
+    plex_token=$(getXPathFromFile "${plex_preferences}" "Preferences/@PlexOnlineToken")
+    plex_username=$(getXPathFromFile "${plex_preferences}" "Preferences/@PlexOnlineUsername")
+    plex_db_backup_path=$(getXPathFromFile "${plex_preferences}" "Preferences/@ButlerDatabaseBackupPath")
+fi
+
+# Use path from plex preferences as default if availalbe, otherwise use plex default db backup location
+library_db_backup_path_local=${plex_db_backup_path:-"${library_path_local}/Plug-in Support/Databases"}
+# overwrite with environment value if supplied
+library_db_backup_path_local=${LIB_BACKUP_PATH_LOCAL:-"${library_db_backup_path_local}"}
+# use as master backup source location too unless environment value is supplied
+library_db_backup_path_master=${LIB_BACKUP_PATH_MASTER:-${library_db_backup_path_local}}
+
+# backup path containing tar files with library image files
+library_images_backup_path_master=${LIB_META_BACKUP_PATH_MASTER:-${library_db_backup_path_master}}
+
+# date and time strings
+current_datetime=$(date +"%Y-%m-%d-%H%M")
+current_date=$(date +"%Y-%m-%d-%H%M")
+current_time=$(date +"%H%M")
+

@@ -1,8 +1,16 @@
-#!/bin/bash
-PLEX_LIBRARY_ROOT="/config/Library"
-TEMP_TAR_FILE=/tmp/library_files.tar.gz
-TAR_BACKUP_FOLDER=/config/backups/meta
+#!/usr/bin/with-contenv bash
+. /usr/local/bin/variables
+
+temp_filename_start="library_files_"
+
+PLEX_LIBRARY_ROOT="$(dirname "$(dirname "${library_path_local}")")"
+TEMP_TAR_FILE="/tmp/${temp_filename_start}${current_datetime}.tar.gz"
+TAR_BACKUP_FOLDER="${library_images_backup_path_master}"
 LOG_FILE="$TEMP_TAR_FILE.log"
+
+LATEST_TAR_BACKUP_FOLDER_FILE=$(find "$TAR_BACKUP_FOLDER" -name ${temp_filename_start}-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9].tar.gz | sort | tail -n 1)
+LATEST_TAR_BACKUP_FOLDER_FILE=$(basename "$LATEST_TAR_BACKUP_FOLDER_FILE")
+LATEST_TAR_BACKUP_DATE="TBA"
 
 echo "$(date) ****** Starting image Libary tar file rebuild ******"
 echo "$(date) ****** Starting image Libary tar file rebuild ******" > "$LOG_FILE"

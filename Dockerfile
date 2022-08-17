@@ -19,6 +19,7 @@ RUN \
         cron \
         sqlite3 \
         sshfs \
+        libxml2-utils \
         && \
 #     echo "**** instaling plex-db-sync ****" && \
 #     wget https://raw.githubusercontent.com/Fmstrat/plex-db-sync/master/plex-db-sync -O "/usr/local/bin/plex_db_sync.sh" && \
