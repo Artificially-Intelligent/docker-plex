@@ -1,16 +1,29 @@
 #!/usr/bin/with-contenv bash
 . /usr/local/bin/variables
 
-# if [[ -n "${library_save_cron:-}" ]]; then
-#     echo "*** scheduling job: save_library_to_disk"
-#     go-cron "$library_save_cron" /usr/local/bin/save_library_to_disk.sh &
-#     sleep 2
-# fi
+crontab_file=/etc/cron.d/library_jobs
 
-# if [[ -n "${library_reload_cron:-}" ]]; then
-#     echo "*** scheduling job: load_master_library_db"
-#     go-cron "$library_reload_cron" /usr/local/bin/save_library_to_disk.sh && /usr/local/bin/load_master_library_db.sh &
-#     sleep 2
-# fi
+# initalise empty crontab file
+rm -f ${crontab_file}
+touch ${crontab_file}
+
+# if library_save_cron defined setup save_library_to_disk job
+if [[ -n "${library_save_cron:-}" ]]; then
+    echo "*** scheduling job: save_library_to_disk"
+    echo "${library_save_cron} /usr/local/bin/save_library_to_disk.sh  >> /var/log/cron.log 2>&1" >> ${crontab_file}
+    sleep 2
+fi
+
+# if library_reload_cron defined setup load_master_library_db job
+if [[ -n "${library_reload_cron:-}" ]]; then
+    echo "*** scheduling job: load_master_library_db"
+    echo "${library_reload_cron} /usr/local/bin/load_master_library_db.sh  >> /var/log/cron.log 2>&1" >> ${crontab_file}
+    sleep 2
+fi
+
+# set crontab file permissions
+chmod 0644 ${crontab_file}
+
+[[ $(cat ${crontab_file} | wc -l) -gt 0 ]] && echo "*** cron jobs created in crobtab ${crontab_file}" && cat ${crontab_file}
 
 exec wait
