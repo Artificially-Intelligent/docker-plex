@@ -25,6 +25,8 @@ RUN \
 #     wget https://raw.githubusercontent.com/Fmstrat/plex-db-sync/master/plex-db-sync -O "/usr/local/bin/plex_db_sync.sh" && \
     echo "**** permissions ****" && \
     chmod a+x /usr/local/bin/* && \
+    chmod a+x /etc/cont-init.d/* && \
+    chmod a+x /etc/cont-finish.d/* && \
     echo "**** cleanup ****" && \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
