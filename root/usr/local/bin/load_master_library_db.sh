@@ -59,7 +59,7 @@ do
         if  [ "$LOAD_LIBRARY_DB_TO_MEMORY" = "YES" ]
         then
             echo "setting ram disk as path for working copy of ${lib_file}"
-            LIBRARY_FILE_TARGET_PATH="${ram_disk_db_path}/${lib_file}"
+            library_db_file_local="${ram_disk_db_path}/${lib_file}"
 
             echo "copying ${library_db_backup_file_master} to ${library_db_file_local}"
             cp --remove-destination "${library_db_backup_file_master}"  "${library_db_file_local}"
@@ -72,7 +72,7 @@ do
         else
         
             echo "setting default library path for working copy of ${lib_file}"
-            LIBRARY_FILE_TARGET_PATH="${library_db_path_local}/${lib_file}"
+            library_db_file_local="${library_db_path_local}/${lib_file}"
 
             if [ -f "${library_db_file_local}" ]
             then
