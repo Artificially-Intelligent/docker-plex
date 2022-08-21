@@ -20,9 +20,18 @@ library_reload_cron=$LIB_RELOAD_CRON
 
 # primary library path
 library_path_local=${LIB_PATH_LOCAL:-""${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}"/Plex Media Server"}
+library_root_path_local="$(dirname "$(dirname "${library_path_local}")")"
+library_db_path_local="${library_path_local}/Plug-in Support/Databases"
 
 # path to use for setting up library ramdisk
 ram_disk_path=${RAM_DISK_PATH:-"/ram_disk"}
+ram_disk_db_path="${ram_disk_path}/Plug-in Support/Databases"
+
+# set YES to use ramdisk
+use_ramdisk=${LOAD_LIBRARY_DB_TO_MEMORY:-"NO"}
+
+# set YES to force reload from backup
+force_library_restore=${FORCE_LIBRARY_RESTORE:-"NO"}
 
 # load values from plex Preferences xml
 getXPathFromFile () {
@@ -38,11 +47,12 @@ if [ -f "${plex_preferences}" ]; then
 fi
 
 # Use path from plex preferences as default if availalbe, otherwise use plex default db backup location
-library_db_backup_path_local=${plex_db_backup_path:-"${library_path_local}/Plug-in Support/Databases"}
+library_db_backup_path_local=${plex_db_backup_path:-"${library_db_path_local}"}
 # overwrite with environment value if supplied
 library_db_backup_path_local=${LIB_BACKUP_PATH_LOCAL:-"${library_db_backup_path_local}"}
 # use as master backup source location too unless environment value is supplied
 library_db_backup_path_master=${LIB_BACKUP_PATH_MASTER:-${library_db_backup_path_local}}
+library_path_master=$(dirname ${library_db_backup_path_local})
 
 # backup path containing tar files with library image files
 library_images_backup_path_master=${LIB_META_BACKUP_PATH_MASTER:-${library_db_backup_path_master}}

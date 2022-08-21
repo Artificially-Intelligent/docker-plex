@@ -5,22 +5,15 @@ echo
 echo "starting copy and sync of plex master library to local working library path"
 echo 
 
-library_db_path_local="${library_path_local}/Plug-in Support/Databases"
-ram_disk_db_path="${ram_disk_path}/Plug-in Support/Databases"
-
 mkdir -p "${library_db_path_local}"
-chown -R -h ${PLEX_UID}:${PLEX_GID} "${library_path_local}/Plug-in Support"
+chown -R -h ${PLEX_UID}:${PLEX_GID} "$(dirname ${library_db_path_local})"
 mkdir -p "${library_db_backup_path_local}"
 chown -R -h ${PLEX_UID}:${PLEX_GID} "${library_db_backup_path_local}"
 mkdir -p "${library_db_backup_path_master}"
 mkdir -p "${ram_disk_db_path}"
 chown -R -h ${PLEX_UID}:${PLEX_GID} "${ram_disk_db_path}"
 
-
-[ -z "$LOAD_LIBRARY_DB_TO_MEMORY" ] && LOAD_LIBRARY_DB_TO_MEMORY="NO"
 library_files=( com.plexapp.plugins.library.db com.plexapp.plugins.library.blobs.db )
-
-mkdir -p /config/Library/Application\ Support/Plex\ Media\ Server/
 
 function syncPlexDB() {
     PLEX_DB_1=${1}
@@ -56,7 +49,7 @@ do
     library_db_backup_file_local="${library_db_backup_path_local}/${lib_file}"
     if [ -f "${library_db_backup_file_master}" ]
     then
-        if  [ "$LOAD_LIBRARY_DB_TO_MEMORY" = "YES" ]
+        if  [ "${use_ramdisk}" = "YES" ]
         then
             echo "setting ram disk as path for working copy of ${lib_file}"
             library_db_file_local="${ram_disk_db_path}/${lib_file}"
@@ -92,7 +85,7 @@ do
             syncPlexDB "${library_db_backup_file_local}" "${library_db_file_local}" --tmp-folder "${ram_disk_path}/plex-db-sync"
         fi
     else
-        if  [ "$LOAD_LIBRARY_DB_TO_MEMORY" = "YES" ]
+        if  [ "${use_ramdisk}" = "YES" ]
         then
             echo "error: master copy of library file not found: copying ${library_db_backup_file_local} to ram disk path ${ram_disk_path}"
             cp "${library_db_backup_file_local}" "${ram_disk_path}"
