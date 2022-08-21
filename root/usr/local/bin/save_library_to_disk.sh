@@ -9,7 +9,7 @@ then
     for library_db_file in $(ls "${ram_disk_db_path}")
     do
         ram_disk_db_file="${ram_disk_db_path}/${library_db_file}"
-        backup_db_file="${library_db_backup_path_master}/${library_db_file}"
+        backup_db_file=$(getNewBackupFilePath)
 
         echo "copying ram disk ${ram_disk_db_file} to backup path ${backup_db_file}"
 

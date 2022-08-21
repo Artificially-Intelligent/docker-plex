@@ -59,6 +59,13 @@ library_images_backup_path_master=${LIB_META_BACKUP_PATH_MASTER:-${library_db_ba
 
 # date and time strings
 current_datetime=$(date +"%Y-%m-%d-%H%M")
-current_date=$(date +"%Y-%m-%d-%H%M")
+current_date=$(date +"%Y-%m-%d")
 current_time=$(date +"%H%M")
 
+getNewBackupFilePath () {
+  backup_db_file="${library_db_backup_path_local}/${library_db_file}-${current_date}"
+  [ -f "${backup_db_file}" ] && backup_db_file="${library_db_backup_path_local}/${library_db_file}-${current_datetime}"
+  echo $backup_db_file
+}
+
+        

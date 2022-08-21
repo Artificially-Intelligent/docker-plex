@@ -15,6 +15,7 @@ chown -R -h ${PLEX_UID}:${PLEX_GID} "${ram_disk_db_path}"
 
 library_files=( com.plexapp.plugins.library.db com.plexapp.plugins.library.blobs.db )
 
+# syncPlexDB needs some work. Probably better to just use the sync plex watch history to cloud feature instead
 function syncPlexDB() {
     PLEX_DB_1=${1}
     PLEX_DB_2=${2}
@@ -69,8 +70,9 @@ do
 
             if [ -f "${library_db_file_local}" ]
             then
-                echo "making backup of ${library_db_file_local} to ${library_db_backup_file_local}"
-                cp --remove-destination "${library_db_file_local}"  "${library_db_backup_file_local}"
+                library_db_file_backup=$(getNewBackupFilePath)
+                echo "making backup of existing ${library_db_file_local} to ${library_db_file_backup}"
+                cp --remove-destination "${library_db_file_local}"  "${library_db_file_backup}"
             fi
 
             echo "copying ${library_db_backup_file_master} to ${library_db_file_local}"
@@ -80,10 +82,10 @@ do
         # set plex user symlink as owner
         chown -h ${PLEX_UID}:${PLEX_GID} "${library_db_file_local}"
 
-        if [ "${lib_file}" = "com.plexapp.plugins.library.db" ]
-        then
-            syncPlexDB "${library_db_backup_file_local}" "${library_db_file_local}" --tmp-folder "${ram_disk_path}/plex-db-sync"
-        fi
+        # if [ "${lib_file}" = "com.plexapp.plugins.library.db" ]
+        # then
+        #     syncPlexDB "${library_db_backup_file_local}" "${library_db_file_local}" --tmp-folder "${ram_disk_path}/plex-db-sync"
+        # fi
     else
         if  [ "${use_ramdisk}" = "YES" ]
         then
