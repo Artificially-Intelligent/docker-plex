@@ -14,10 +14,10 @@ if [[ -n "${library_save_cron:-}" ]]; then
     sleep 2
 fi
 
-# if library_reload_cron defined setup load_master_library_db job
+# if library_reload_cron defined setup load_library_db_to_ram job
 if [[ -n "${library_reload_cron:-}" ]]; then
-    echo "*** scheduling job: load_master_library_db"
-    echo "${library_reload_cron} /usr/local/bin/load_master_library_db.sh  >> /var/log/cron.log 2>&1" >> ${crontab_file}
+    echo "*** scheduling job: load_library_db_to_ram"
+    echo "${library_reload_cron} /usr/local/bin/load_library_db_to_ram.sh  >> /var/log/cron.log 2>&1" >> ${crontab_file}
     sleep 2
 fi
 

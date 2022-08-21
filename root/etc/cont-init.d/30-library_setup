@@ -15,7 +15,7 @@ bash /usr/local/bin/restore-corrupt-library-backup.sh
 bash /usr/local/bin/fix-library-permissions.sh
 
 # Load latest version of library database from master backups
-bash /usr/local/bin/load_master_library_db.sh
+bash /usr/local/bin/load_library_db_to_ram.sh
 
 echo
 echo "$(date) - Plex custom startup scripts finished"

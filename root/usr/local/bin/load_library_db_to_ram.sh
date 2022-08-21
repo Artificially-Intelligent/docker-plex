@@ -13,7 +13,6 @@ mkdir -p "${library_db_backup_path_master}"
 mkdir -p "${ram_disk_db_path}"
 chown -R -h ${PLEX_UID}:${PLEX_GID} "${ram_disk_db_path}"
 
-library_files=( com.plexapp.plugins.library.db com.plexapp.plugins.library.blobs.db )
 
 # syncPlexDB needs some work. Probably better to just use the sync plex watch history to cloud feature instead
 function syncPlexDB() {
@@ -64,19 +63,20 @@ do
             # set plex user symlink as owner
             chown -h ${PLEX_UID}:${PLEX_GID} "${library_db_path_local}/${lib_file}"
         else
-        
             echo "setting default library path for working copy of ${lib_file}"
             library_db_file_local="${library_db_path_local}/${lib_file}"
+            # if a seperate master library has been specified, of file is a symbolic link load library from the latest backup
+            if [ "${library_db_backup_path_master}" != "${library_db_backup_path_local}" ] && [ -L "${library_db_file_local}" ]; then
+                if [ -f "${library_db_file_local}" ]
+                then
+                    library_db_file_backup=$(getNewBackupFilePath "${lib_file}")
+                    echo "making backup of existing ${library_db_file_local} to ${library_db_file_backup}"
+                    cp --remove-destination "${library_db_file_local}"  "${library_db_file_backup}"
+                fi
 
-            if [ -f "${library_db_file_local}" ]
-            then
-                library_db_file_backup=$(getNewBackupFilePath)
-                echo "making backup of existing ${library_db_file_local} to ${library_db_file_backup}"
-                cp --remove-destination "${library_db_file_local}"  "${library_db_file_backup}"
+                echo "copying ${library_db_backup_file_master} to ${library_db_file_local}"
+                cp --remove-destination "${library_db_backup_file_master}"  "${library_db_file_local}"
             fi
-
-            echo "copying ${library_db_backup_file_master} to ${library_db_file_local}"
-            cp --remove-destination "${library_db_backup_file_master}"  "${library_db_file_local}"
         fi
 
         # set plex user symlink as owner
@@ -89,8 +89,8 @@ do
     else
         if  [ "${use_ramdisk}" = "YES" ]
         then
-            echo "error: master copy of library file not found: copying ${library_db_backup_file_local} to ram disk path ${ram_disk_path}"
-            cp "${library_db_backup_file_local}" "${ram_disk_path}"
+            echo "error: master copy of library file not found: copying ${library_db_backup_file_local} to ram disk path ${ram_disk_db_path}"
+            cp "${library_db_backup_file_local}" "${ram_disk_db_path}"
         fi
     fi
 done
