@@ -17,8 +17,8 @@ echo "Temp Image Backup TAR: ${TEMP_TAR_FILE}"
 
 echo "$(date) ****** Starting image Libary tar file rebuild ******"
 echo "$(date) ****** Starting image Libary tar file rebuild ******" > "$LOG_FILE"
-cd "$library_root_path_local"
-tar -cvpzf "$TEMP_TAR_FILE" "./Application Support/Plex Media Server/Metadata" "./Application Support/Plex Media Server/Media" >> "$LOG_FILE"
+cd "$library_path_local"
+tar -cvpzf "$TEMP_TAR_FILE" "./Metadata" "./Media" >> "$LOG_FILE"
 
 if [ $(gzip -t "$TEMP_TAR_FILE") ]
 then

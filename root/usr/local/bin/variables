@@ -20,7 +20,6 @@ library_reload_cron=$LIB_RELOAD_CRON
 
 # primary library path
 library_path_local=${LIB_PATH_LOCAL:-""${PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR}"/Plex Media Server"}
-library_root_path_local="$(dirname "$(dirname "${library_path_local}")")"
 library_db_path_local="${library_path_local}/Plug-in Support/Databases"
 
 # path to use for setting up library ramdisk
