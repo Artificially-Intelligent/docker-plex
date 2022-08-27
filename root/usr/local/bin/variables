@@ -68,11 +68,16 @@ current_datetime=$(date +"${current_datetime_format}")
 current_date=$(date +"%Y-%m-%d")
 current_time=$(date +"%H%M")
 
+# start of tar files used for library images backup
+library_images_tar_filename_start="library_images"
+
 getNewBackupFilePath () {
   library_db_file=$1
   backup_db_file="${library_db_backup_path_local}/${library_db_file}-${current_date}"
   [ -f "${backup_db_file}" ] && backup_db_file="${library_db_backup_path_local}/${library_db_file}-${current_datetime}"
   echo $backup_db_file
 }
+
+
 
         
