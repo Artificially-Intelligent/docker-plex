@@ -37,7 +37,7 @@ do
 
     echo "Temp Image Backup TAR: ${TEMP_TAR_FILE}"
     echo "Creating tar backup for file modified: ${min_file_mod_time} - ${max_file_mod_time}"
-    echo "Creating tar backup for file modified: ${min_file_mod_time} - ${max_file_mod_time}" > "$LOG_FILE"
+    echo "Creating tar backup for file modified: ${min_file_mod_time} - ${max_file_mod_time}" >> "$LOG_FILE"
 
     # find files last modified between dates and send to tar
     find "./Metadata" "./Media" -newermt "${min_file_mod_time}" ! -newermt "${max_file_mod_time}" -print0 | tar -cvzpf  "$TEMP_TAR_FILE" --null -T - >> "$LOG_FILE"
