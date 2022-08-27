@@ -13,6 +13,8 @@ LATEST_TAR_BACKUP_DATE=$(echo $LATEST_TAR_BACKUP_FOLDER_FILE | cut -d "." -f1 | 
 NEW_TAR_BACKUP_DATE=${LATEST_TAR_BACKUP_DATE:-"2021-01-01 0000"}
 NEW_TAR_BACKUP_DATE=$(date --date="$NEW_TAR_BACKUP_DATE+1 month" +"${current_datetime_format}")
 
+LATEST_TAR_BACKUP_DATE=${LATEST_TAR_BACKUP_DATE:-"1970-01-01 0000"}
+
 # change directory to root path for tar file
 cd "$library_path_local"
 
@@ -24,8 +26,7 @@ do
     fi
 
     max_file_mod_time=$(date --date="${NEW_TAR_BACKUP_DATE}") 
-    min_file_mod_time=$(date --date="${LATEST_TAR_BACKUP_DATE:-"1970-01-01 0000"}")
-    LATEST_TAR_BACKUP_DATE=${LATEST_TAR_BACKUP_DATE:-"2021-01-01 0000"}
+    min_file_mod_time=$(date --date="${LATEST_TAR_BACKUP_DATE}")
     
     TEMP_TAR_FILE="/tmp/${temp_filename_start}_${LATEST_TAR_BACKUP_DATE}_to_${NEW_TAR_BACKUP_DATE}.tar.gz"
     LOG_FILE="$TEMP_TAR_FILE.log"
