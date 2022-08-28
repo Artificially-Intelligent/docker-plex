@@ -43,11 +43,11 @@ do
     find "./Metadata" "./Media" -newermt "${min_file_mod_time}" ! -newermt "${max_file_mod_time}" > "${LIST_FILE}"
     
     echo "$(date) Found $( cat "${LIST_FILE}" | wc -l) files. Adding to tar ${TEMP_TAR_FILE}" >> "$LOG_FILE"
-    tar -czpf  "${TEMP_TAR_FILE}" -T  "${LIST_FILE}" >> "$LOG_FILE"
-
-    if [ $(gzip -t "$TEMP_TAR_FILE") ]
+    tar --create -z --file="${TEMP_TAR_FILE}" --files-from="${LIST_FILE}" >> "$LOG_FILE"
+    stat "${TEMP_TAR_FILE}" >> "$LOG_FILE"
+    
+    if  gzip -v -t "${TEMP_TAR_FILE}" 2> "$LOG_FILE"
     then
-        ls -lah ${TEMP_TAR_FILE} >> "$LOG_FILE"
         echo "tar gzip compression tested ok, moving ${TEMP_TAR_FILE} to backup dir ${TAR_BACKUP_FOLDER}"
         mv "$TEMP_TAR_FILE" "$TAR_BACKUP_FOLDER/"
         echo "$(date) ****** Finished image Libary tar file load ******" >> "$LOG_FILE"
@@ -58,14 +58,14 @@ do
         mv "$LOG_FILE" "$TAR_BACKUP_FOLDER/"
         rm "$LIST_FILE"
     else
-        echo "error - tar gzip compression failed when tested, removing ${TEMP_TAR_FILE}" >> "$LOG_FILE"
+        echo "error - tar gzip compression failed when tested: removing ${TEMP_TAR_FILE}" >> "$LOG_FILE"
         echo "error - tar gzip compression failed when tested, removing ${TEMP_TAR_FILE}"
+        
+        echo "$(date) ****** Finished image Libary tar file rebuild ******"  >> "$LOG_FILE"
+    
         rm "$TEMP_TAR_FILE"
         #break
     fi
-    
-    
-    echo "$(date) ****** Finished image Libary tar file rebuild ******"    
     
     # initalise next while loop
     LATEST_TAR_BACKUP_DATE="${NEW_TAR_BACKUP_DATE}"
