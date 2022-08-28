@@ -1,6 +1,9 @@
 #!/usr/bin/with-contenv bash
     . /usr/local/bin/variables
 
+# change directory to root path for tar file
+cd "$library_path_local"
+
 echo "$(date) ****** Starting save_library_images_to_tar.sh ******"
 
 TAR_BACKUP_FOLDER="${library_images_backup_path_master}"
@@ -9,54 +12,52 @@ LATEST_TAR_BACKUP_FOLDER_FILE=$(find "$TAR_BACKUP_FOLDER" -name ${library_images
 LATEST_TAR_BACKUP_FOLDER_FILE=$(basename "$LATEST_TAR_BACKUP_FOLDER_FILE")
 LATEST_TAR_BACKUP_DATE=$(echo $LATEST_TAR_BACKUP_FOLDER_FILE | cut -d "." -f1 | cut -d "_" -f5)
 
-NEW_TAR_BACKUP_DATE=${LATEST_TAR_BACKUP_DATE:-"2022-04-01 0000"}
-NEW_TAR_BACKUP_DATE=$(date --date="$NEW_TAR_BACKUP_DATE+1 week" +"${current_datetime_format}")
-
 LATEST_TAR_BACKUP_DATE=${LATEST_TAR_BACKUP_DATE:-"1970-01-01 0000"}
 
-# change directory to root path for tar file
-cd "$library_path_local"
+NEW_TAR_BACKUP_DATE=$(date +"${current_datetime_format}")
 
-while [ "$(date --date="${NEW_TAR_BACKUP_DATE}" +%s)" -lt "$(date +%s)" ]
+max_file_mod_time=$(date --date="${NEW_TAR_BACKUP_DATE}") 
+min_file_mod_time=$(date --date="${LATEST_TAR_BACKUP_DATE}")
+
+TEMP_TAR_FILE="/tmp/${library_images_tar_filename_start}_${LATEST_TAR_BACKUP_DATE}_to_${NEW_TAR_BACKUP_DATE}.tar.gz"
+LOG_FILE="$TEMP_TAR_FILE.log"
+LIST_FILE="${TEMP_TAR_FILE}_file_list.txt"
+
+
+echo "$(date) ****** Starting image Libary tar file creation ******"
+echo "$(date) ****** Starting image Libary tar file creation ******" > "$LOG_FILE"
+
+echo "Temp Image Backup TAR: ${TEMP_TAR_FILE}"
+
+# find files last modified between dates and send to tar
+echo "Finding files modified: ${min_file_mod_time} - ${max_file_mod_time}"
+echo "Finding files modified: ${min_file_mod_time} - ${max_file_mod_time}" >> "$LOG_FILE"
+find "./Metadata" "./Media" -newermt "${min_file_mod_time}" ! -newermt "${max_file_mod_time}" > "${LIST_FILE}"
+echo "$(date) Found $( cat "${LIST_FILE}" | wc -l) files. Adding to tar ${TEMP_TAR_FILE}" >> "$LOG_FILE"
+
+rm -f /tmp/split_file_list_*
+split "${LIST_FILE}" -a 3 -d -l 100000 /tmp/split_file_list_
+
+for split_list_file in $(ls /tmp/split_file_list_*)
 do
-    # set max_file_mod_time to now if in future    
-    if [ $(date --date="${NEW_TAR_BACKUP_DATE}" +%s) -gt $(date +%s) ]; then
-        NEW_TAR_BACKUP_DATE=$(date +"${current_datetime_format}")
-    fi
-
-    max_file_mod_time=$(date --date="${NEW_TAR_BACKUP_DATE}") 
-    min_file_mod_time=$(date --date="${LATEST_TAR_BACKUP_DATE}")
-    
-    TEMP_TAR_FILE="/tmp/${library_images_tar_filename_start}_${LATEST_TAR_BACKUP_DATE}_to_${NEW_TAR_BACKUP_DATE}.tar.gz"
-    LOG_FILE="$TEMP_TAR_FILE.log"
-    LIST_FILE="${TEMP_TAR_FILE}_file_list.txt"
-
-    
-    echo "$(date) ****** Starting image Libary tar file creation ******"
-    echo "$(date) ****** Starting image Libary tar file creation ******" > "$LOG_FILE"
-
-    echo "Temp Image Backup TAR: ${TEMP_TAR_FILE}"
-
-    # find files last modified between dates and send to tar
-    echo "Finding files modified: ${min_file_mod_time} - ${max_file_mod_time}"
-    echo "Finding files modified: ${min_file_mod_time} - ${max_file_mod_time}" >> "$LOG_FILE"
-    find "./Metadata" "./Media" -newermt "${min_file_mod_time}" ! -newermt "${max_file_mod_time}" > "${LIST_FILE}"
-    
-    echo "$(date) Found $( cat "${LIST_FILE}" | wc -l) files. Adding to tar ${TEMP_TAR_FILE}" >> "$LOG_FILE"
-    tar --create -z --file="${TEMP_TAR_FILE}" --files-from="${LIST_FILE}" >> "$LOG_FILE"
+    split_number="${split_list_file##*_}"
+    TEMP_TAR_FILE="/tmp/${library_images_tar_filename_start}_${LATEST_TAR_BACKUP_DATE}_to_${NEW_TAR_BACKUP_DATE}_${split_number}.tar.gz"
+    echo "$(date) Adding $( cat "${split_list_file}" | wc -l) files to tar ${TEMP_TAR_FILE}"
+    echo "$(date) Adding $( cat "${split_list_file}" | wc -l) files to tar ${TEMP_TAR_FILE}" >> "$LOG_FILE"
+    tar --create -z --file="${TEMP_TAR_FILE}" --files-from="${split_list_file}" >> "$LOG_FILE"
     stat "${TEMP_TAR_FILE}" >> "$LOG_FILE"
     
     if  gzip -v -t "${TEMP_TAR_FILE}" 2> "$LOG_FILE"
     then
-        echo "tar gzip compression tested ok, moving ${TEMP_TAR_FILE} to backup dir ${TAR_BACKUP_FOLDER}"
+        echo "tar gzip compression tested ok, moving ${TEMP_TAR_FILE} to  dir ${TAR_BACKUP_FOLDER}"
         mv "$TEMP_TAR_FILE" "$TAR_BACKUP_FOLDER/"
         echo "$(date) ****** Finished image Libary tar file load ******" >> "$LOG_FILE"
         echo "" >> "$LOG_FILE"
         echo "files added to tar:" >> "$LOG_FILE"
         echo "" >> "$LOG_FILE"
-        cat "$LIST_FILE" >> "$LOG_FILE"
+        cat "$split_list_file" >> "$LOG_FILE"backup
         mv "$LOG_FILE" "$TAR_BACKUP_FOLDER/"
-        rm "$LIST_FILE"
+        rm "$split_list_file"
     else
         echo "error - tar gzip compression failed when tested: removing ${TEMP_TAR_FILE}" >> "$LOG_FILE"
         echo "error - tar gzip compression failed when tested, removing ${TEMP_TAR_FILE}"
@@ -66,11 +67,8 @@ do
         rm "$TEMP_TAR_FILE"
         #break
     fi
-    
-    # initalise next while loop
-    LATEST_TAR_BACKUP_DATE="${NEW_TAR_BACKUP_DATE}"
-    NEW_TAR_BACKUP_DATE=$(date --date="$NEW_TAR_BACKUP_DATE+1 month" +"${current_datetime_format}")
 done
+    
 
 
 echo "$(date) ****** Finished save_library_images_to_tar.sh ******"

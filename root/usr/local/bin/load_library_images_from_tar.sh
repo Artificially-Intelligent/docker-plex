@@ -11,7 +11,7 @@ FOUND_FILE="${library_path_local}/library_images_found.dat"
 
 [ -f "${DONE_FILE}" ] && loaded_tar_backup_files=$(cat ${DONE_FILE})
 
-find "$TAR_BACKUP_FOLDER" -name ${temp_filename_start}_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]_to_[0-9][0-9][0-9][0-9]-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9].tar.gz sort > ${FOUND_FILE}
+find "$TAR_BACKUP_FOLDER" -name ${temp_filename_start}_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]_to_[0-9][0-9][0-9][0-9]-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]_[0-9][0-9][0-9].tar.gz sort > ${FOUND_FILE}
 
 echo "$(date) ****** Starting image Libary load from tar file ******"
 
