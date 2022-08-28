@@ -7,10 +7,17 @@ crontab_file=/etc/cron.d/library_jobs
 rm -f ${crontab_file}
 touch ${crontab_file}
 
-# if library_save_cron defined setup save_library_to_disk job
-if [[ -n "${library_save_cron:-}" ]]; then
+# if library_db_backup_cron defined setup save_library_to_disk job
+if [[ -n "${library_db_backup_cron:-}" ]]; then
     echo "*** scheduling job: save_library_to_disk"
-    echo "${library_save_cron} /usr/local/bin/save_library_to_disk.sh  >> /var/log/cron.log 2>&1" >> ${crontab_file}
+    echo "${library_db_backup_cron} /usr/local/bin/save_library_to_disk.sh  >> /var/log/cron.log 2>&1" >> ${crontab_file}
+    sleep 2
+fi
+
+# if library_meta_backup_cron defined setup save_library_images_to_tar job
+if [[ -n "${library_meta_backup_cron:-}" ]]; then
+    echo "*** scheduling job: save_library_images_to_tar"
+    echo "${library_meta_backup_cron} /usr/local/bin/save_library_images_to_tar.sh  >> /var/log/cron.log 2>&1" >> ${crontab_file}
     sleep 2
 fi
 

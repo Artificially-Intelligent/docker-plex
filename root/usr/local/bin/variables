@@ -11,7 +11,11 @@ healthcheck_paths=${HEALTHCHECK_PATHS:-}
 ## Crontab
 
 # crontab settings for saving library to local backup. Missing = dont run
-library_save_cron=$LIB_SAVE_CRON
+library_db_backup_cron=$LIB_DB_BACKUP_CRON
+
+
+# crontab settings for saving library images to tar backup. Missing = dont run
+library_meta_backup_cron=$LIB_META_BACKUP_CRON
 
 # crontab settings for reloading library to from master backup. Missing = dont run
 library_reload_cron=$LIB_RELOAD_CRON
