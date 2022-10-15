@@ -34,6 +34,8 @@ jobs:
           docker pull ${{ env.IMAGE_NAME }}:$PLEX_VER && X_SKIP=true || X_SKIP=false
           [[ $GITHUB_EVENT_NAME != "schedule" ]] && X_SKIP=false
           echo "X_SKIP=$X_SKIP" >> $GITHUB_ENV
+          echo "APP_VER=$VER" >> $GITHUB_ENV
+
       -
         name: Checkout
         if: env.X_SKIP == 'false'
@@ -143,6 +145,7 @@ jobs:
           docker pull ${{ env.IMAGE_NAME }}:$PLEX_VER && X_SKIP=true || X_SKIP=false
           [[ $GITHUB_EVENT_NAME != "schedule" ]] && X_SKIP=false
           echo "X_SKIP=$X_SKIP" >> $GITHUB_ENV
+          echo "APP_VER=$VER" >> $GITHUB_ENV
       -
         name: Checkout
         if: env.X_SKIP == 'false'
