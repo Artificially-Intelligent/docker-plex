@@ -12,6 +12,9 @@ FOUND_FILE="${library_path_local}/library_images_found.dat"
 
 find "$TAR_BACKUP_FOLDER" -name "${library_images_tar_filename_start}_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9][0-9][0-9]_to_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9][0-9][0-9]_[0-9][0-9][0-9].tar.gz" | sort > "${FOUND_FILE}"
 
+# Make sure done file exists so it can be used for rclone filtering even if its empty
+touch "${DONE_FILE}" 
+
 echo "$(date) ****** Starting image Libary load from tar $(cat "${FOUND_FILE}" | wc -l) file(s) ******"
 
 cd "${library_path_local}"
@@ -26,7 +29,8 @@ do
         if [ $(gzip -t "${tar_backup_file}") ]
         then
             echo "Loading images from Image Backup TAR: $tar_backup_file"
-            #tar -xzf "$tar_backup_file" -C "$library_path_local" --checkpoint=.5000
+            #####tar -xzf "$tar_backup_file" -C "$library_path_local" --checkpoint=.5000
+            
             # formatted to match rclone --filter-from requirements
             echo "- ${tar_backup_filename}" >>  "${DONE_FILE}"
         else
