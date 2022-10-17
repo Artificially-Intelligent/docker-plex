@@ -8,10 +8,9 @@ LOG_FILE="${library_path_local}/library_images.log"
 DONE_FILE="${library_path_local}/library_images_loaded.dat"
 FOUND_FILE="${library_path_local}/library_images_found.dat"
 
+# [ -f "${DONE_FILE}" ] && loaded_tar_backup_files=$(cat ${DONE_FILE})
 
-[ -f "${DONE_FILE}" ] && loaded_tar_backup_files=$(cat ${DONE_FILE})
-
-find "$TAR_BACKUP_FOLDER" -name ${temp_filename_start}_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]_to_[0-9][0-9][0-9][0-9]-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9]_[0-9][0-9][0-9].tar.gz sort > ${FOUND_FILE}
+find "$TAR_BACKUP_FOLDER" -name find "$TAR_BACKUP_FOLDER" -name "${library_images_tar_filename_start}_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9][0-9][0-9]_to_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9][0-9][0-9]_[0-9][0-9][0-9].tar.gz" | sort > ${FOUND_FILE}
 
 echo "$(date) ****** Starting image Libary load from tar file ******"
 
@@ -31,7 +30,6 @@ do
 done < ${FOUND_FILE}
 
 echo "$(date) ****** Finished image Libary load from tar file ******"
-
 
 echo "$(date) ****** Starting image Libary load from tar file ******" > "$LOG_FILE"
 cd "${library_path_local}"
