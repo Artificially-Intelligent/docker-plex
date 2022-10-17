@@ -12,7 +12,7 @@ then
 
         cp --remove-destination "${ram_disk_db_file}" "${backup_db_file}"
     done
-    /usr/local/bin/variables/remove_old_backups.sh
+    /usr/local/bin/remove_old_backups.sh
 else
     echo "not using ramdisk, no need to save to disk"
 fi
