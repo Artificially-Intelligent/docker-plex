@@ -30,8 +30,9 @@ do
             # formatted to match rclone --filter-from requirements
             echo "- ${tar_backup_filename}" >>  "${DONE_FILE}"
         else
-            echo "error tar gzip compression failed when tested, removing file from disk ahead of fresh download from cloud storage: ${tar_backup_file}"
-            rm "${tar_backup_file}"
+            echo "error tar gzip compression failed when tested, file might still be in the process of downloading: ${tar_backup_file}"
+        #     echo "error tar gzip compression failed when tested, removing file from disk ahead of fresh download from cloud storage: ${tar_backup_file}"
+        #     rm "${tar_backup_file}"
         fi
     fi
 done < "${FOUND_FILE}"
