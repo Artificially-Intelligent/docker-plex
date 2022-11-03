@@ -55,7 +55,9 @@ library_db_backup_path_local=${plex_db_backup_path:-"${library_db_path_local}"}
 library_db_backup_path_local=${LIB_BACKUP_PATH_LOCAL:-"${library_db_backup_path_local}"}
 # use as master backup source location too unless environment value is supplied
 library_db_backup_path_master=${LIB_BACKUP_PATH_MASTER:-${library_db_backup_path_local}}
-library_path_master=$(dirname ${library_db_backup_path_local})
+
+# path for master library to link media contents from.
+library_path_master=${LIB_PATH_MASTER:-${library_path_local}}
 
 # backup path containing tar files with library image files
 library_images_backup_path_master=${LIB_META_BACKUP_PATH_MASTER:-${library_db_backup_path_master}}
