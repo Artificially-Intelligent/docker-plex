@@ -38,7 +38,11 @@ force_library_restore=${FORCE_LIBRARY_RESTORE:-"NO"}
 
 # load values from plex Preferences xml
 getXPathFromFile () {
-  xmllint --recover --xpath "$2" "$1"
+  xml_value=$(xmllint --recover --xpath "$2" "$1")
+  if [ -z "${xml_value}" ]; then
+    >&2 echo "NOTE: was not able to parse $2 from $1 "
+  fi
+  echo "${xml_value}"
 }
 
 plex_preferences="${library_path_local}/Preferences.xml"
