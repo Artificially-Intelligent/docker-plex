@@ -81,15 +81,17 @@ current_time=$(date +"%H%M")
 # start of tar files used for library images backup
 library_images_tar_filename_start="library_images"
 
+backup_files_to_keep=5
+docker_backup_label=${docker_backup_label:-"-docker"}
+
 getNewBackupFilePath () {
   library_db_file=$1
   overwrite=$2
-  backup_db_file="${library_db_backup_path_local}/${library_db_file}-docker-${current_date}"
+  backup_db_file="${library_db_backup_path_local}/${library_db_file}${docker_backup_label}-${current_date}"
   [ -z "${overwrite}" ] && [ -f "${backup_db_file}" ] &&  backup_db_file="${library_db_backup_path_local}/${library_db_file}-${current_datetime}"
   echo $backup_db_file
 }
 
-backup_files_to_keep=5
 
 
 

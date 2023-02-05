@@ -8,12 +8,12 @@ backup_size_threshold=${backup_size_threshold:-"10M"}
 for  lib_file in "${library_files[@]}"
 do
     # delete library db files older than ${library_db_backup_retention_days} days
-    find "${library_db_backup_path_local}" -name ${lib_file}-docker-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]*  -type f -mtime +${library_db_backup_retention_days} -exec rm -f {} \;
+    find "${library_db_backup_path_local}" -name ${lib_file}${docker_backup_label}-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]*  -type f -mtime +${library_db_backup_retention_days} -exec rm -f {} \;
 done
 
 
 for  lib_file in "${library_files[@]}"; do
-    sorted_files=$(find "${library_db_backup_path_local}" -name ${lib_file}-docker-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]*  -type f -size +${backup_size_threshold} | sort)
+    sorted_files=$(find "${library_db_backup_path_local}" -name ${lib_file}${docker_backup_label}-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]*  -type f -size +${backup_size_threshold} | sort)
 
     # Check how many files there are
     count=$(echo "$sorted_files" | wc -l)
