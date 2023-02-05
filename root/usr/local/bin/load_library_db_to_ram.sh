@@ -69,7 +69,7 @@ do
             if [ "${library_db_backup_path_master}" != "${library_db_backup_path_local}" ] && [ -L "${library_db_file_local}" ]; then
                 if [ -f "${library_db_file_local}" ]
                 then
-                    library_db_file_backup=$(getNewBackupFilePath "${lib_file}")
+                    library_db_file_backup=$(getNewBackupFilePath "${lib_file}" "overwrite")
                     echo "making backup of existing ${library_db_file_local} to ${library_db_file_backup}"
                     cp --remove-destination "${library_db_file_local}"  "${library_db_file_backup}"
                 fi
