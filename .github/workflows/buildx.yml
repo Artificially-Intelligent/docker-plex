@@ -74,6 +74,8 @@ jobs:
           docker rm -f $CID
           echo "APP_VER=$PLEX_VER" >> $GITHUB_ENV
           echo ::set-output name=github_desc::$(curl -sX GET https://api.github.com/repos/${GITHUB_REPOSITORY} | jq -r .description)
+          echo "DOCKERHUB_USER=${{ env.DOCKERHUB_USER }}"
+          echo "GITHUB_CR_USER=${{ github.repository_owner }}" 
       -
         name: Login to docker.io
         if: env.X_SKIP == 'false'
