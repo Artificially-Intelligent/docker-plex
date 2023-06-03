@@ -72,9 +72,9 @@ jobs:
           CID=$(docker run -d ${{ env.IMAGE_NAME }}:testing)
           PLEX_VER=$(wget -q https://registry.hub.docker.com/v2/repositories/linuxserver/plex/tags -O -  | sed -e 's/[][]//g' -e 's/"//g' -e 's/ //g' | tr '}' '\n'  | grep version | grep -v null | awk -F: '{print $7}' | tail -n1 | cut -f3 -d'-')
           docker rm -f $CID
+          echo "APP_VER=$PLEX_VER"
           echo "APP_VER=$PLEX_VER" >> $GITHUB_ENV
           echo ::set-output name=github_desc::$(curl -sX GET https://api.github.com/repos/${GITHUB_REPOSITORY} | jq -r .description)
-          echo "PLEX_VER=${$PLEX_VER}"
           echo "DOCKERHUB_USER=${{ env.DOCKERHUB_USER }}"
           echo "GITHUB_CR_USER=${{ github.repository_owner }}" 
       -
