@@ -92,7 +92,4 @@ getNewBackupFilePath () {
   echo $backup_db_file
 }
 
-
-
-
         

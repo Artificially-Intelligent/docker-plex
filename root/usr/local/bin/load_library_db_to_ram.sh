@@ -43,9 +43,12 @@ function syncPlexDB() {
     fi       
 }
 
-for  lib_file in "${library_files[@]}"
-do
-    library_db_backup_file_master=$(find "${library_db_backup_path_master}" -name ${lib_file}-20[0-9][0-9]-[0-9][0-9]-[0-9][0-9] | sort | tail -n 1)
+
+restoreLibBackup () {
+    lib_file=$1
+    backup_suffix=$2
+
+    library_db_backup_file_master="${library_db_backup_path_master}/${lib_file}${backup_suffix}"
     library_db_backup_file_local="${library_db_backup_path_local}/${lib_file}"
     if [ -f "${library_db_backup_file_master}" ]
     then
@@ -93,7 +96,17 @@ do
             cp "${library_db_backup_file_local}" "${ram_disk_db_path}"
         fi
     fi
+}
+
+# check file extensions. keep the newest that occours more than once. Extension has the format: db-YYYY-MM-DD
+latest_backup_extension=$(ls -lt "${library_db_backup_path_master}"/*.db-* | awk -F. '{print $NF}' | uniq -d | head -n 1)
+latest_backup_suffix="${latest_backup_extension#db}"
+
+for  lib_file_name in "${library_files[@]}"
+do
+    restoreLibBackup "${lib_file_name}" "${latest_backup_suffix}"
 done
+
 
 echo 
 echo "finished copy and sync of plex master library to local working library path"
